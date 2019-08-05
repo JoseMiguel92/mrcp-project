@@ -5,7 +5,7 @@ class Node:
         self.p_weight = p_weight
         self.q_weight = q_weight
         self.degree = degree
-        self.neighbors_indices = []
+        self.neighbors_indices = set()
 
     def set_node_id(self, node_id):
         self.node_id = node_id

@@ -30,7 +30,7 @@ class Instance:
     def _fill_neighbors_indices(self, node, neighbors):
         for neighbor in neighbors:
             if neighbor != '':
-                node.get_neighbor_indices().append(neighbor)
+                node.get_neighbor_indices().add(neighbor)
 
     def read_file(self, file_path):
         count_line = 0
