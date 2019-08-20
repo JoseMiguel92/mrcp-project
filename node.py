@@ -38,4 +38,4 @@ class Node:
         return self.neighbors_indices
 
     def is_adjacent(self, node):
-        return str(node.get_node_id()) in self.neighbors_indices
+        return node.get_node_id() in self.neighbors_indices
