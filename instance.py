@@ -48,7 +48,7 @@ class Instance:
                     count_line += 1
                     continue
                 elif line[0] != '' and line[1] != '' and line[2] != '':
-                    node = Node(node_id, int(line[0]), int(line[1]), int(line[2]))
+                    node = Node(node_id, float(line[0]), float(line[1]), int(line[2]))
                     if line[3] != '':
                         self._fill_neighbors_indices(node, line[3:])
                     self.add_node(node_id, node)
