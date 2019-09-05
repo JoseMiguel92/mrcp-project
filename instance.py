@@ -22,8 +22,8 @@ class Instance:
     def get_node(self, node_id):
         return self.nodes.get(node_id)
 
-    def are_adjacents(self, node_id_1, node_id_2):
-        return self.nodes.get(node_id_1).is_adjacent(node_id_2)
+    def are_adjacents(self, node_1, node_2):
+        return node_1.is_adjacent(node_2)
 
     def add_node(self, node_id, node):
         self.nodes.update({node_id: node})
@@ -31,7 +31,7 @@ class Instance:
     def _fill_neighbors_indices(self, node, neighbors):
         for neighbor in neighbors:
             if neighbor != '':
-                node.get_neighbor_indices().add(neighbor)
+                node.get_neighbor_indices().add(int(neighbor))
 
     def read_file(self, file_path):
         """Read a file of the path passed as a parameter (treated as a csv) and fill in the object data.

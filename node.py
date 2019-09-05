@@ -1,6 +1,6 @@
 class Node:
 
-    def __init__(self, node_id=0, p_weight=0, q_weight=0, degree=0):
+    def __init__(self, node_id=0, p_weight=0.0, q_weight=0.0, degree=0):
         self.node_id = node_id
         self.p_weight = p_weight
         self.q_weight = q_weight
