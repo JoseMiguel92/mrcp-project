@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+# Created by José Miguel García Benayas
+
 from instance import Instance
 from time import gmtime, strftime
 import logging

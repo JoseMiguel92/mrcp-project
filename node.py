@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+# Created by José Miguel García Benayas
+
 class Node:
 
     def __init__(self, node_id=0, p_weight=0.0, q_weight=0.0, degree=0):
