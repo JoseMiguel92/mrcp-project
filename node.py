@@ -11,6 +11,7 @@ class Node:
         self.q_weight = q_weight
         self.degree = degree
         self.neighbors_indices = set()
+        self.neighbors_dict = dict()
 
     def set_node_id(self, node_id):
         self.node_id = node_id
@@ -24,8 +25,13 @@ class Node:
     def set_degree(self, degree):
         self.degree = degree
 
-    def add_neighbor_indices(self, neighbor_indices):
+    def set_neighbor_indices(self, neighbor_indices):
         self.neighbors_indices = neighbor_indices
+
+    def fill_neighbors_indices(self, neighbors):
+        for neighbor in neighbors:
+            if neighbor != '':
+                self.get_neighbor_indices().add(int(neighbor))
 
     def get_node_id(self):
         return self.node_id
@@ -42,5 +48,8 @@ class Node:
     def get_neighbor_indices(self):
         return self.neighbors_indices
 
+    def get_neighbors_dict(self):
+        return self.neighbors_dict
+
     def is_adjacent(self, node):
-        return node.get_node_id() in self.neighbors_indices
+        return node.get_node_id() in self.get_neighbor_indices()

@@ -26,16 +26,20 @@ class Instance:
     def get_node(self, node_id):
         return self.nodes.get(node_id)
 
-    def are_adjacents(self, node_1, node_2):
-        return node_1.is_adjacent(node_2)
-
     def add_node(self, node_id, node):
         self.nodes.update({node_id: node})
 
-    def _fill_neighbors_indices(self, node, neighbors):
-        for neighbor in neighbors:
-            if neighbor != '':
-                node.get_neighbor_indices().add(int(neighbor))
+    def set_total_nodes(self, total_nodes):
+        self.total_nodes = total_nodes
+
+    def set_total_edges(self, total_edges):
+        self.total_edges = total_edges
+
+    def _fill_neighbors_dict(self):
+        for node in self.get_nodes().values():
+            for neighbor in node.get_neighbor_indices():
+                node_neighbor = self.get_nodes().get(neighbor)
+                node.get_neighbors_dict().update({node_neighbor.get_node_id(): node_neighbor})
 
     def read_file(self, file_path):
         """Read a file of the path passed as a parameter (treated as a csv) and fill in the object data.
@@ -54,6 +58,15 @@ class Instance:
                 elif line[0] != '' and line[1] != '' and line[2] != '':
                     node = Node(node_id, float(line[0]), float(line[1]), int(line[2]))
                     if line[3] != '':
-                        self._fill_neighbors_indices(node, line[3:])
+                        node.fill_neighbors_indices(line[3:])
                     self.add_node(node_id, node)
                     node_id += 1
+        self._fill_neighbors_dict()
+
+    def set_graph(self, list_nodes):
+        self.set_total_nodes(len(list_nodes))
+        # sum_edges = 0
+        for node in list_nodes:
+            # sum_edges += len(node.get_neighbor_indices())
+            self.add_node(node.get_node_id(), node)
+        # self.set_total_edges(sum_edges/2)
