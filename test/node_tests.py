@@ -2,7 +2,6 @@
 
 # Created by José Miguel García Benayas
 
-import os, shutil
 import unittest
 
 from graph_utils import GraphUtils
@@ -36,27 +35,6 @@ class NodeTest(unittest.TestCase):
         graph.read_file(NodeTest.GRAPH_SIMPLE_2_TEST_PTH)
         solution = Solution(graph)
         self.assertFalse(GraphUtils.is_clique(solution.get_graph()))
-
-    def test_create_table(self):
-        if not os.path.isdir(NodeTest.CSV_OUTPUT_DIR):
-            os.mkdir(NodeTest.CSV_OUTPUT_DIR)
-
-        data = dict()
-        data.update({'random-1': [100, 45.78]})
-        data.update({'random-2': [150, 64.46]})
-        csv_columns = ['|V|', 'D(%)']
-        try:
-            if os.altsep is None:
-                file_sep = os.sep
-            path = NodeTest.CSV_OUTPUT_DIR + file_sep + NodeTest.CSV_OUTPUT_FILE
-            GraphUtils.create_csv_table(path, data, csv_columns)
-            self.assertTrue(os.path.isfile(path))
-        except IOError:
-            self.fail("Test failed.")
-
-        finally:
-            if os.path.isdir(NodeTest.CSV_OUTPUT_DIR):
-                shutil.rmtree(NodeTest.CSV_OUTPUT_DIR)
 
 
 if __name__ == '__main__':

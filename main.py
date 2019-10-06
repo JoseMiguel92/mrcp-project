@@ -2,33 +2,38 @@
 
 # Created by José Miguel García Benayas
 
-from instance import Instance
-from time import gmtime, strftime
 import logging
+import os
 
+from instance import Instance
 from logger.logger import Logger
+from solution import Solution
+from graph_utils import GraphUtils
+import time
 
 # Logs
 Logger.init_log()
 LOGGER = logging.getLogger(__name__)
 
 # Graphs paths
-GRAPH_PATH = 'sets/set-d/wind-2004.txt'
+GRAPH_PATH = 'sets/set-a/'
 
 # Messages
-MAIN_INFO_ADJACENTS = 'Node {} and Node {} are adjacents.'
-MAIN_INFO_NOT_ADJACENTS = 'Node {} and Node {} aren\'t adjacents.'
-MAIN_INFO_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-
+MAIN_TIME = "Total time: {:1.10f} seconds"
 
 if __name__ == '__main__':
-    graph = Instance()
-    graph.read_file(GRAPH_PATH)
-    node_compare = graph.get_nodes().get(0)
-    LOGGER.debug(strftime(MAIN_INFO_TIME_FORMAT, gmtime()))
-    for node in graph.get_nodes().values():
-        if node.is_adjacent(node_compare):
-            LOGGER.debug(MAIN_INFO_ADJACENTS.format(node.get_node_id(), node_compare.get_node_id()))
-        else:
-            LOGGER.debug(MAIN_INFO_NOT_ADJACENTS.format(node.get_node_id(), node_compare.get_node_id()))
-    LOGGER.debug(strftime(MAIN_INFO_TIME_FORMAT, gmtime()))
+
+    start_time = time.time()
+
+    data = dict()
+
+    for file in os.listdir(GRAPH_PATH):
+        graph = Instance()
+        graph.read_file(GRAPH_PATH + file)
+        solution = Solution(graph, os.path.splitext(file)[0])
+        solution.set_solution_max_cliques()
+        data.update(solution.collect_sol_data())
+
+    GraphUtils.export_solution(data)
+    LOGGER.debug(MAIN_TIME.format(time.time() - start_time))
+

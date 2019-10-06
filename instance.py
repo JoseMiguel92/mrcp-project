@@ -63,10 +63,5 @@ class Instance:
                     node_id += 1
         self._fill_neighbors_dict()
 
-    def set_graph(self, list_nodes):
-        self.set_total_nodes(len(list_nodes))
-        # sum_edges = 0
-        for node in list_nodes:
-            # sum_edges += len(node.get_neighbor_indices())
-            self.add_node(node.get_node_id(), node)
-        # self.set_total_edges(sum_edges/2)
+    def calculate_density(self):
+        return (2 * self.get_total_edges()) / (self.get_total_nodes() * (self.get_total_nodes() - 1))
