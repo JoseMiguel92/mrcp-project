@@ -20,7 +20,7 @@ class SolutionTest(unittest.TestCase):
     def test_solution_OK(self):
         graph = Instance()
         graph.read_file(SolutionTest.GRAPH_SIMPLE_1_TEST_PTH)
-        solution = Solution(graph)
+        solution = Solution(graph, 'test-graph-simple-1')
         cliques = solution.get_solution_max_cliques()
         print(cliques)
         expected_sol = [{0, 1, 2}]
@@ -37,7 +37,7 @@ class SolutionTest(unittest.TestCase):
         graph = Instance()
         graph.read_file(SolutionTest.GRAPH_1_TEST_PTH)
         solution = Solution(graph, 'random-1')
-        solution.export_solution()
+        cliques = solution.get_solution_max_cliques()
         self.assertTrue(os.path.isfile(self.CSV_OUTPUT_FILE))
 
 

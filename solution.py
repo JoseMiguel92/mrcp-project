@@ -9,7 +9,6 @@ from instance import Instance
 
 
 class Solution:
-
     LOGGER = logging.getLogger(__name__)
 
     def __init__(self, graph: Instance, name):
@@ -21,11 +20,18 @@ class Solution:
         self.cardinality = 0.0
         self.compute_time = 0.0
 
+    def chosen_one(self, vertices, graph):
+        chosen_one = vertices.pop()
+        for vertex in vertices:
+            if len(graph.get_node(vertex).get_neighbor_indices()) > len(graph.get_node(chosen_one).get_neighbor_indices()):
+                chosen_one = vertex
+        return chosen_one
+
     def find_max_cliques_chosen_node(self, r, p, x, graph, cliques):
         if len(p) == 0 and len(x) == 0:
             cliques.append(r)
         else:
-            chosen_node = next(iter(p.union(x)))
+            chosen_node = self.chosen_one(p.union(x), graph)
             for vertex in p.difference(graph.get_node(chosen_node).get_neighbor_indices()):
                 neighbors = graph.get_node(vertex).get_neighbor_indices()
                 self.find_max_cliques_chosen_node(r.union({vertex}), p.intersection(neighbors),
@@ -60,5 +66,5 @@ class Solution:
     def collect_sol_data(self):
         data = dict()
         data.update({self.name: [self.graph.get_total_nodes(), self.density, self.sol_value,
-                                 self.cardinality, self.compute_time]})
+                                 self.cardinality, round(self.compute_time, 2)]})
         return data
