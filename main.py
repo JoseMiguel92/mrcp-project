@@ -3,13 +3,14 @@
 # Created by José Miguel García Benayas
 
 import logging
-import os, sys
+import os
+import sys
+import time
 
+from graph_utils import GraphUtils
 from instance import Instance
 from logger.logger import Logger
 from solution import Solution
-from graph_utils import GraphUtils
-import time
 
 # Logs
 Logger.init_log()

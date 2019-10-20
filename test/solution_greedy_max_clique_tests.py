@@ -5,7 +5,7 @@
 import unittest
 
 from instance import Instance
-from solution_greedy_clique_ratio import SolutionGreedy
+from solution_greedy_max_clique import SolutionGreedy
 
 
 class SolutionGreedyMaxCliqueTest(unittest.TestCase):

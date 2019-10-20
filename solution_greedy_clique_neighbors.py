@@ -8,7 +8,7 @@ import random
 from instance import Instance
 
 
-class SolutionGreedy:
+class SolutionGreedyNeighbors:
     LOGGER = logging.getLogger(__name__)
 
     def __init__(self, graph: Instance, name):

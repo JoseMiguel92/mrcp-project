@@ -8,7 +8,7 @@ import random
 from instance import Instance
 
 
-class SolutionGreedy:
+class SolutionGreedyRatio:
     LOGGER = logging.getLogger(__name__)
 
     def __init__(self, graph: Instance, name):
@@ -41,8 +41,7 @@ class SolutionGreedy:
                     continue
                 elif self.belong_to_clique(node, clique) and self.has_max_ratio(node, current_ratio, clique):
                     node_chosen = node
-
-            clique.append(node_chosen)
+                    clique.append(node_chosen)
 
         else:
             return sorted(clique)
@@ -57,7 +56,8 @@ class SolutionGreedy:
         return belong
 
     def has_max_ratio(self, node, current_ratio, clique):
-        new_clique = clique.append(node)
+        new_clique = clique.copy()
+        new_clique.append(node)
         if current_ratio >= self.calculate_total_ratio(new_clique):
             return False
         else:
@@ -67,7 +67,7 @@ class SolutionGreedy:
         total_p_weight = 0
         total_q_weight = 0
         for node in clique:
-            total_p_weight += node.p_weight
-            total_q_weight += node.q_weight
+            total_p_weight += self.graph.get_node(node).p_weight
+            total_q_weight += self.graph.get_node(node).q_weight
 
         return total_p_weight/total_q_weight
