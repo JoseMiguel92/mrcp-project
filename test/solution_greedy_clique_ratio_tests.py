@@ -5,6 +5,7 @@
 import unittest
 import os
 
+
 from instance import Instance
 from solution_greedy_clique_ratio import SolutionGreedyRatio
 

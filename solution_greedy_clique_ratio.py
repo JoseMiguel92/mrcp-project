@@ -20,6 +20,15 @@ class SolutionGreedyRatio:
         self.cardinality = 0.0
         self.compute_time = 0.0
 
+    def find_clique_by_ratio_wnode(self, vertex):
+        vertices = list(self.graph.nodes.keys())
+        clique = [vertices[vertex]]
+        self.find_clique_by_ratio_aux(vertex, vertex, clique)
+        self.clique = clique
+        self.cardinality = len(self.clique)
+        self.sol_value = self.calculate_total_ratio(self.clique)
+        return sorted(clique)
+
     def find_clique_by_ratio(self):
         vertices = list(self.graph.nodes.keys())
         vertex = random.randrange(0, len(vertices), 1)

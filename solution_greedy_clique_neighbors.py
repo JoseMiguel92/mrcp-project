@@ -20,6 +20,14 @@ class SolutionGreedyNeighbors:
         self.cardinality = 0.0
         self.compute_time = 0.0
 
+    def find_clique_by_neighbors_wnode(self, vertex):
+        vertices = list(self.graph.nodes.keys())
+        clique = [vertices[vertex]]
+        self.find_clique_by_neighbors_aux(vertex, vertex, clique)
+        self.clique = clique
+        self.cardinality = len(self.clique)
+        return sorted(clique)
+
     def find_clique_by_neighbors(self):
         vertices = list(self.graph.nodes.keys())
         vertex = random.randrange(0, len(vertices), 1)
