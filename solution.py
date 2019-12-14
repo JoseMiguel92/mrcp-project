@@ -14,7 +14,7 @@ class Solution:
     def __init__(self, graph: Instance, name):
         self.name = name
         self.graph = graph
-        self.density = round(100 * self.graph.calculate_density(), 2)
+        self.density = self.graph.calculate_density()
         self.cliques = []
         self.sol_value = 0.0
         self.cardinality = 0.0

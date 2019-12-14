@@ -17,9 +17,6 @@ LOGGER = logging.getLogger(__name__)
 
 LOG_ERROR_WRITE_DOC = 'Error when writing a file.'
 
-CSV_OUTPUT_DIR = "output"
-CSV_OUTPUT_FILE = "solution_table.csv"
-
 
 class GraphUtils:
 
@@ -70,13 +67,30 @@ class GraphUtils:
         return nodes.index(0)
 
     @staticmethod
-    def export_solution(data):
-        if not os.path.isdir(CSV_OUTPUT_DIR):
-            os.mkdir(CSV_OUTPUT_DIR)
+    def export_solution(output, data, name):
+        if not os.path.isdir(output):
+            os.mkdir(output)
         try:
             if os.altsep is None:
                 file_sep = os.sep
-            path = CSV_OUTPUT_DIR + file_sep + CSV_OUTPUT_FILE
+            path = output + file_sep + name
             GraphUtils.create_mrcp_csv_table(path, data)
         except IOError:
             LOGGER.error(LOG_ERROR_WRITE_DOC)
+
+    @staticmethod
+    def calculate_clique_ratio(graph, clique):
+        total_p_weight = 0
+        total_q_weight = 0
+        for node in clique:
+            total_p_weight += graph.get_node(node).p_weight
+            total_q_weight += graph.get_node(node).q_weight
+
+        return total_p_weight / total_q_weight
+
+    @staticmethod
+    def calculate_solution(graph, clique):
+        ratio = GraphUtils.calculate_clique_ratio(graph, clique)
+        density = graph.calculate_density()
+        cardinality = len(clique)
+        return ratio, density, cardinality

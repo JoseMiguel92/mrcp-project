@@ -4,65 +4,24 @@
 
 import unittest
 import random
+import bisect
 
 from instance import Instance
-from solution_greedy_clique_neighbors import SolutionGreedyNeighbors
-from solution_greedy_clique_ratio import SolutionGreedyRatio
+from solution_grasp import SolutionGrasp
 
 
 class SolutionGraspTests(unittest.TestCase):
-    ADJACENT = "adjacent"
-    RATIO = "ratio"
     GRAPH_SIMPLE_1_TEST_PTH = 'test_files/test-graph-type-1.txt'
 
     def test_grasp_OK(self):
         graph = Instance()
         file = SolutionGraspTests.GRAPH_SIMPLE_1_TEST_PTH
-        graph.read_file(file)  # parametro
-        solution_type = self.ADJACENT  # parametro
-        fixed_seed = 1  # parametro
-        number_vertices = len(graph.nodes)
-        random.seed(fixed_seed)
-        vertex = random.randint(0, number_vertices-1)
-        g_v = None
-
-        if solution_type == self.ADJACENT:
-            sgn = SolutionGreedyNeighbors(graph, file)
-            g_v = sgn.find_clique_by_neighbors_wnode(vertex)
-        if solution_type == self.RATIO:
-            sgr = SolutionGreedyRatio(graph, file)
-            g_v = sgr.find_clique_by_ratio_wnode(vertex)
-        solution = {vertex}
-        cl = graph.nodes.keys()  # lista de nodos del grafo
-        while len(cl) != 0:
-            g_min, g_max = self.get_g(cl, g_v)
-            alpha = 0.33  # rango entre 0.0 y 1.0  # parametro
-            mu = g_max - alpha * (g_max - g_min)
-            rcl = self.get_rcl(mu, g_v, cl)  # lista con los g(v) pertenecientes a cl mayores que mu
-            random.seed(fixed_seed)
-            random_position = random.randint(0, len(rcl) - 1)
-            u = rcl[random_position]
-            solution = solution.union({u})
-            cl -= {u}
-            cl -= cl.intersection(graph.get_node(u).neighbors_indices)  # todos los nodos no adyacentes a u de g(v)?
-
-    def get_g(self, candidates_list, g_v):
-        g_v_set = set(g_v)
-        g_v_set.intersection_update(candidates_list)
-        g_min = min(g_v_set)
-        g_max = max(g_v_set)
-        return g_min, g_max
-
-    def get_rcl(self, mu, node_list, candidates_list):
-        remaining_candidates = sorted(list(set(node_list) & set(candidates_list)))
-        remaining_candidates.reverse()
-        position = 0
-        for candidate in remaining_candidates:
-            if candidate < mu:
-                break
-            else:
-                position += 1
-        return remaining_candidates[:position]
+        graph.read_file(file)
+        solution_type = SolutionGrasp.ADJACENT
+        fixed_seed = 1
+        alpha = 0.5
+        instance_solution = SolutionGrasp()
+        result = instance_solution.find_grasp_solution(graph, file, solution_type, fixed_seed, alpha)
 
     def test_random_seed(self):
         for i in range(13):
@@ -70,6 +29,32 @@ class SolutionGraspTests(unittest.TestCase):
             num = random.sample(range(10), 10)
             print("{0} : {1}".format(i, num))
         self.assertTrue(True)
+
+    def test_bisect(self):
+        g_c = list()
+        bisect.insort(g_c, 100)
+        bisect.insort(g_c, 90)
+        bisect.insort(g_c, 30)
+        bisect.insort(g_c, 45)
+        bisect.insort(g_c, 60)
+        bisect.insort(g_c, 59)
+        print(g_c)
+        num = 59
+        pos = bisect.bisect_left(g_c, num)
+        print(pos)
+        g_c_result = g_c[pos:]
+        g_c_result.reverse()
+        print(g_c_result)
+
+    def test_random(self):
+        a = dict()
+        for i in range(10):
+            num_r = random.randint(0, 100)
+            gen = {i:num_r}
+            a.update(gen)
+            print("{1} : {0}".format(num_r, i+1))
+        for k, v in a:
+            print("clave= {0}: valor= {1}".format(k, v))
 
 
 if __name__ == '__main__':

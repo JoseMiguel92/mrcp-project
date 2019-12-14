@@ -23,6 +23,7 @@ GRAPH_PATH = 'sets/set-a/'
 MAIN_TOTAL_TIME = "Total time: {:1.10f} seconds"
 MAIN_PROCESS_FILE = "Processing: "
 MAIN_PARTIAL_TIME = "{} with {} cliques : {:1.10f} seconds"
+CSV_OUTPUT_FILE = "solution_table.csv"
 
 if __name__ == '__main__':
 
@@ -37,6 +38,6 @@ if __name__ == '__main__':
         print(MAIN_PARTIAL_TIME.format(os.path.splitext(file)[0], len(solution.cliques), solution.compute_time))
         data.update(solution.collect_sol_data())
 
-    GraphUtils.export_solution(data)
+    GraphUtils.export_solution(data, CSV_OUTPUT_FILE)
     LOGGER.debug(MAIN_TOTAL_TIME.format(time.time() - start_time))
     sys.exit()

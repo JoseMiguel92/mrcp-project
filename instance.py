@@ -64,4 +64,4 @@ class Instance:
         self._fill_neighbors_dict()
 
     def calculate_density(self):
-        return (2 * self.get_total_edges()) / (self.get_total_nodes() * (self.get_total_nodes() - 1))
+        return round(100 * (2 * self.get_total_edges()) / (self.get_total_nodes() * (self.get_total_nodes() - 1)), 2)

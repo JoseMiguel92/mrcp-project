@@ -4,6 +4,7 @@
 
 import logging
 import random
+import time
 
 from instance import Instance
 
@@ -14,7 +15,7 @@ class SolutionGreedyRatio:
     def __init__(self, graph: Instance, name):
         self.name = name
         self.graph = graph
-        self.density = round(100 * self.graph.calculate_density(), 2)
+        self.density = self.graph.calculate_density()
         self.clique = []
         self.sol_value = 0.0
         self.cardinality = 0.0
@@ -23,20 +24,26 @@ class SolutionGreedyRatio:
     def find_clique_by_ratio_wnode(self, vertex):
         vertices = list(self.graph.nodes.keys())
         clique = [vertices[vertex]]
+        start_time = time.time()
         self.find_clique_by_ratio_aux(vertex, vertex, clique)
+        finish_time = time.time()
         self.clique = clique
         self.cardinality = len(self.clique)
         self.sol_value = self.calculate_total_ratio(self.clique)
+        self.compute_time = finish_time - start_time
         return sorted(clique)
 
     def find_clique_by_ratio(self):
         vertices = list(self.graph.nodes.keys())
         vertex = random.randrange(0, len(vertices), 1)
         clique = [vertices[vertex]]
+        start_time = time.time()
         self.find_clique_by_ratio_aux(vertex, vertex, clique)
+        finish_time = time.time()
         self.clique = clique
         self.cardinality = len(self.clique)
         self.sol_value = self.calculate_total_ratio(self.clique)
+        self.compute_time = finish_time - start_time
         return sorted(clique)
 
     def find_clique_by_ratio_aux(self, root, father, clique):
