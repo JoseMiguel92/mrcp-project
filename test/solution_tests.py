@@ -15,7 +15,7 @@ class SolutionTest(unittest.TestCase):
     GRAPH_SIMPLE_2_TEST_PTH = 'test_files/test-graph-simple-2.txt'
     GRAPH_SIMPLE_s2_TEST_PTH = 'test_files/test-graph-simple-s2.txt'
     GRAPH_SIMPLE_3_TEST_PTH = 'test_files/test-graph-simple-3.txt'
-    CSV_OUTPUT_FILE = "test_files/output/solution_table.csv"
+    CSV_OUTPUT_FILE = "test_files/output/solution_table_0,5.csv"
 
     def test_solution_OK(self):
         graph = Instance()

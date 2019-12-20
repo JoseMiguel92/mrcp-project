@@ -53,7 +53,7 @@ class GraphUtils:
                 path to save a file.
                 data to fill the table.
         """
-        csv_columns = ['|V|', 'D(%)', 'ƒ', 'c', 't(sec)']
+        csv_columns = ['|V|', 'D(%)', 'ƒ', 'c', 't(sec)', 'α']
         df = pd.DataFrame.from_dict(data, orient='index', columns=csv_columns)
         df.to_csv(path, sep=';', index=True)
 
