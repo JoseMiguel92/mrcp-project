@@ -4,3 +4,5 @@ __pycache__
 venv
 .DS_STORE
 output/*
+sets/*
+setsBK/*
