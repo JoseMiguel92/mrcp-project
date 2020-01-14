@@ -7,6 +7,7 @@ import random
 import time
 
 from instance import Instance
+from graph_utils import GraphUtils
 
 
 class SolutionGreedyNeighbors:
@@ -22,10 +23,15 @@ class SolutionGreedyNeighbors:
         self.compute_time = 0.0
 
     def find_clique_by_neighbors_wnode(self, vertex):
-        vertices = list(self.graph.nodes.keys())
-        clique = [vertices[vertex]]
+        clique = [vertex]
         start_time = time.time()
         self.find_clique_by_neighbors_aux(vertex, vertex, clique)
+        if GraphUtils.verify_clique(self.graph, clique):
+            print("es clique")
+            print(clique)
+        else:
+            print("no es clique")
+            print(clique)
         finish_time = time.time()
         self.clique = clique
         self.cardinality = len(self.clique)
@@ -36,15 +42,7 @@ class SolutionGreedyNeighbors:
     def find_clique_by_neighbors(self):
         vertices = list(self.graph.nodes.keys())
         vertex = random.randrange(0, len(vertices), 1)
-        clique = [vertices[vertex]]
-        start_time = time.time()
-        self.find_clique_by_neighbors_aux(vertex, vertex, clique)
-        finish_time = time.time()
-        self.clique = clique
-        self.cardinality = len(self.clique)
-        self.sol_value = self.calculate_total_ratio(self.clique)
-        self.compute_time = finish_time - start_time
-        return sorted(clique)
+        return self.find_clique_by_neighbors_wnode(vertex)
 
     def find_clique_by_neighbors_aux(self, root, father, clique):
         root_neighbors = self.graph.get_node(root).neighbors_indices
@@ -54,10 +52,13 @@ class SolutionGreedyNeighbors:
             for node in father_good_neighbors:
                 if node_chosen is None:
                     node_chosen = node
-
-                elif self.graph.get_node(node).neighbors_indices.intersection(root_neighbors) > self.graph.get_node(
-                        node_chosen).neighbors_indices.intersection(root_neighbors):
-                    node_chosen = node
+                else:
+                    node_root_neighbors = self.graph.get_node(node).neighbors_indices.intersection(
+                        root_neighbors)
+                    node_chosen_root_neighbors = self.graph.get_node(node_chosen).neighbors_indices.intersection(
+                        root_neighbors)
+                    if node_root_neighbors > node_chosen_root_neighbors:
+                        node_chosen = node
 
             clique.append(node_chosen)
             self.find_clique_by_neighbors_aux(root, node_chosen, clique)
@@ -82,4 +83,4 @@ class SolutionGreedyNeighbors:
             total_p_weight += self.graph.get_node(node).p_weight
             total_q_weight += self.graph.get_node(node).q_weight
 
-        return total_p_weight/total_q_weight
+        return total_p_weight / total_q_weight

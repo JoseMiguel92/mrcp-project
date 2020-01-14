@@ -2,6 +2,8 @@
 
 # Created by José Miguel García Benayas
 
+from graph_utils import GraphUtils
+
 
 class Node:
 
@@ -53,3 +55,13 @@ class Node:
 
     def is_adjacent(self, node):
         return node.get_node_id() in self.get_neighbor_indices()
+
+    def apply_type_set(self, type_set, total_nodes):
+        if type_set == GraphUtils.SET_SET_E:
+            self.p_weight = 1
+            self.q_weight = 2
+        elif type_set == GraphUtils.SET_SET_F:
+            self.p_weight = self.node_id
+            self.q_weight = total_nodes - self.node_id + 1
+        else:
+            raise Exception("Set type does not exists.")

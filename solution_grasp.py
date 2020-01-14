@@ -16,9 +16,11 @@ class SolutionGrasp:
     LOGGER = logging.getLogger(__name__)
 
     def find_grasp_solution(self, graph, name, solution_type, fixed_seed, alpha):
+        """ Finf solution on graph with a GRASP algorithm. """
         number_vertices = len(graph.nodes)
         random.seed(fixed_seed)
-        vertex = random.randint(0, number_vertices - 1)
+        total_keys = sorted(list(graph.nodes.keys()))
+        vertex = random.randint(total_keys[0], total_keys[-1])
         solution = {vertex}
         cl = graph.nodes[vertex].neighbors_indices
         while len(cl) != 0:
@@ -34,6 +36,7 @@ class SolutionGrasp:
         return solution
 
     def get_g(self, candidates_list, solution_type, graph, name):
+        """ Find g_min and g_max with current candidate list and solution type chosen. """
         g_c = dict()
         for candidate in candidates_list:
             chosen_solution = None
@@ -50,6 +53,7 @@ class SolutionGrasp:
         return g_min[0], g_max[0]
 
     def get_rcl(self, mu, cl):
+        """ Get a remaining candidate list with mu limit. """
         remaining_candidates_temp = sorted(list(cl))
         position = bisect.bisect_left(remaining_candidates_temp, mu)
         remaining_candidates = remaining_candidates_temp[position:]

@@ -8,7 +8,6 @@ import os
 
 import pandas as pd
 
-from instance import Instance
 from logger.logger import Logger
 
 # Logs
@@ -19,13 +18,17 @@ LOG_ERROR_WRITE_DOC = 'Error when writing a file.'
 
 
 class GraphUtils:
+    TYPE_DIMACS2 = 'DIMACS2'
+    TYPE_DIMACS10 = 'DIMACS10'
+    SET_SET_E = 'set-e'
+    SET_SET_F = 'set-f'
 
     @staticmethod
     def are_adjacent(node_1, node_2):
         return node_1.is_adjacent(node_2)
 
     @staticmethod
-    def is_clique(graph: Instance):
+    def is_clique(graph):
         """Check if a graph is a clique (all nodes of graph are connected to other
         nodes of graph).
             Args:
@@ -41,6 +44,16 @@ class GraphUtils:
         return clique
 
     @staticmethod
+    def verify_clique(graph, clique):
+        is_clique = True
+        for node_id in clique:
+            for node_id_to_compare in clique:
+                if node_id != node_id_to_compare:
+                    if not GraphUtils.are_adjacent(graph.get_node(node_id_to_compare), graph.get_node(node_id)):
+                        return False
+        return is_clique
+
+    @staticmethod
     def create_mrcp_csv_table(path, data):
         """ Create a csv file in disk with table result of the clique search in a graph.
             The columns are:
@@ -49,6 +62,7 @@ class GraphUtils:
                 ƒ: solution value.
                 c: cardinality.
                 t(sec): computation time in seconds.
+                α: indicates that alpha has been used in the iteration.
             Args:
                 path to save a file.
                 data to fill the table.

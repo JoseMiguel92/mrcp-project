@@ -7,6 +7,7 @@ import random
 import time
 
 from instance import Instance
+from graph_utils import GraphUtils
 
 
 class SolutionGreedyRatio:
@@ -22,10 +23,15 @@ class SolutionGreedyRatio:
         self.compute_time = 0.0
 
     def find_clique_by_ratio_wnode(self, vertex):
-        vertices = list(self.graph.nodes.keys())
-        clique = [vertices[vertex]]
+        clique = [vertex]
         start_time = time.time()
         self.find_clique_by_ratio_aux(vertex, vertex, clique)
+        if GraphUtils.verify_clique(self.graph, clique):
+            print("es clique")
+            print(clique)
+        else:
+            print("no es clique")
+            print(clique)
         finish_time = time.time()
         self.clique = clique
         self.cardinality = len(self.clique)
@@ -36,15 +42,7 @@ class SolutionGreedyRatio:
     def find_clique_by_ratio(self):
         vertices = list(self.graph.nodes.keys())
         vertex = random.randrange(0, len(vertices), 1)
-        clique = [vertices[vertex]]
-        start_time = time.time()
-        self.find_clique_by_ratio_aux(vertex, vertex, clique)
-        finish_time = time.time()
-        self.clique = clique
-        self.cardinality = len(self.clique)
-        self.sol_value = self.calculate_total_ratio(self.clique)
-        self.compute_time = finish_time - start_time
-        return sorted(clique)
+        return self.find_clique_by_ratio_wnode(vertex)
 
     def find_clique_by_ratio_aux(self, root, father, clique):
         father_neighbors = self.graph.get_node(father).neighbors_indices
@@ -55,9 +53,11 @@ class SolutionGreedyRatio:
                 if node_chosen is None:
                     node_chosen = node
                     continue
-                elif self.belong_to_clique(node, clique) and self.has_max_ratio(node, current_ratio, clique):
-                    node_chosen = node
-                    clique.append(node_chosen)
+                elif self.belong_to_clique(node, clique):
+                    better_ratio, current_ratio = self.has_max_ratio(node, current_ratio, clique)
+                    if better_ratio:
+                        node_chosen = node
+                        clique.append(node_chosen)
 
         else:
             return sorted(clique)
@@ -74,10 +74,11 @@ class SolutionGreedyRatio:
     def has_max_ratio(self, node, current_ratio, clique):
         new_clique = clique.copy()
         new_clique.append(node)
-        if current_ratio >= self.calculate_total_ratio(new_clique):
-            return False
+        new_ratio = self.calculate_total_ratio(new_clique)
+        if current_ratio >= new_ratio:
+            return False, current_ratio
         else:
-            return True
+            return True, new_ratio
 
     def calculate_total_ratio(self, clique):
         total_p_weight = 0
