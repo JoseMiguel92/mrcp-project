@@ -39,13 +39,17 @@ def export_graph_info(graph_instance):
         print("{0}:{1}".format(node.node_id, node.neighbors_indices))
 
 
+def split_name(total_path):
+    name_splitted = os.path.splitext(total_path)[0].split("/")
+    return "{0}_{1}".format(name_splitted[1], name_splitted[-1])
+
+
 if __name__ == '__main__':
     fixed_seed = None
     random_alpha = random.random()
-    # alpha_list = [0.25, 0.5, 0.75, random_alpha]
-    alpha_list = [0.25]
+    alpha_list = [0.25, 0.5, 0.75, random_alpha]
     graph = Instance()
-    solution_types = [SolutionGrasp.ADJACENT]
+    solution_types = [SolutionGrasp.RATIO, SolutionGrasp.ADJACENT]
     for solution_type in solution_types:
         for file in glob.glob(GRAPH_PATH_SETS + ALL_FILES_TXT_EXT, recursive=True):
             data = dict()
@@ -63,7 +67,8 @@ if __name__ == '__main__':
                     data.update({table_key_name: [graph.get_total_nodes(), density, ratio, cardinality,
                                                   find_grasp_sol_time, alpha]})
                     LOGGER.debug(MAIN_LOG_PROCESS.format(file, solution_type, iteration, alpha, find_grasp_sol_time))
-            export_filename = CSV_OUTPUT_FILE.format(solution_type, filename)
+            output_name = split_name(file)
+            export_filename = CSV_OUTPUT_FILE.format(solution_type, output_name)
             GraphUtils.export_solution(CSV_OUTPUT_DIR, data, export_filename)
 
     sys.exit()

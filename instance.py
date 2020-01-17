@@ -71,7 +71,7 @@ class Instance:
                     self.total_nodes = int(line[0])
                     self.total_edges = int(line[1])
                     count_line += 1
-                    continue
+
                 elif line[0] != '' and line[1] != '' and line[2] != '':
                     node = Node(node_id, float(line[0]), float(line[1]), int(line[2]))
                     if line[3] != '':
@@ -88,7 +88,7 @@ class Instance:
                     self.total_nodes = int(line[0])
                     self.total_edges = int(line[1])
                     count_line += 1
-                    continue
+
                 elif line[0] != '' and line[1] != '':
                     if int(line[0]) not in self.nodes.keys():
                         node = Node()
@@ -121,7 +121,7 @@ class Instance:
                     self.total_nodes = int(line[0])
                     self.total_edges = int(line[1])
                     count_line += 1
-                    continue
+
                 elif line[0] != '' and line[1] != '':
                     node = Node(node_id, 0.0, 0.0, int(line[0]))
                     node.apply_type_set(type_set, self.total_nodes)
@@ -140,7 +140,11 @@ class Instance:
         node_id = total_keys[-1] + 1
         node = Node(node_id, 1, 1, len(self.nodes))
         node.neighbors_indices = set(total_keys)
+        for current_node in self.nodes.values():
+            current_node.neighbors_indices.add(node_id)
         self.add_node(node_id, node)
+        self.total_nodes += 1
+        self.total_edges += self.total_nodes-1
 
     def calculate_density(self):
         return round(100 * (2 * self.get_total_edges()) / (self.get_total_nodes() * (self.get_total_nodes() - 1)), 2)

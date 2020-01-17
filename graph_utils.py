@@ -3,7 +3,6 @@
 # Created by José Miguel García Benayas
 
 import logging
-import random
 import os
 
 import pandas as pd
@@ -54,6 +53,15 @@ class GraphUtils:
         return is_clique
 
     @staticmethod
+    def become_clique(graph, clique, node):
+        is_clique = True
+        for node_id in clique:
+            if node_id != node:
+                if not GraphUtils.are_adjacent(graph.get_node(node), graph.get_node(node_id)):
+                    return False
+        return is_clique
+
+    @staticmethod
     def create_mrcp_csv_table(path, data):
         """ Create a csv file in disk with table result of the clique search in a graph.
             The columns are:
@@ -72,21 +80,14 @@ class GraphUtils:
         df.to_csv(path, sep=';', index=True)
 
     @staticmethod
-    def get_random_node(nodes):
-        return random.randint(0, len(nodes))
-
-    @staticmethod
-    def get_max_degree_node(self, nodes):
-        nodes.sort(key=lambda node: node.get_degree(), reverse=True)
-        return nodes.index(0)
-
-    @staticmethod
     def export_solution(output, data, name):
         if not os.path.isdir(output):
             os.mkdir(output)
         try:
             if os.altsep is None:
                 file_sep = os.sep
+            else:
+                file_sep = os.altsep
             path = output + file_sep + name
             GraphUtils.create_mrcp_csv_table(path, data)
         except IOError:
@@ -108,3 +109,9 @@ class GraphUtils:
         density = graph.calculate_density()
         cardinality = len(clique)
         return ratio, density, cardinality
+
+    @staticmethod
+    def discard_adjacent(graph, adjacent, candidate):
+        """ Discard all adjacent of father that not adjacent to candidate. """
+        adjacent.intersection_update(graph.get_node(candidate).neighbors_indices)
+        return adjacent
