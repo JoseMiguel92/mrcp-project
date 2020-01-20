@@ -49,10 +49,10 @@ if __name__ == '__main__':
         for file in glob.glob(GRAPH_PATH_SETS + ALL_FILES_TXT_EXT, recursive=True):
             data = dict()
             filename = os.path.splitext(os.path.basename(file))[0]
+            graph.read_file(file)
+            instance_solution = SolutionGrasp()
             for alpha in alpha_list:
                 for iteration in range(1, TOTAL_ITERATIONS + 1):
-                    graph.read_file(file)
-                    instance_solution = SolutionGrasp()
                     start_time = time.time()
                     solution = instance_solution.find_grasp_solution(graph, file, solution_type, fixed_seed, alpha)
                     find_grasp_sol_time = time.time() - start_time
