@@ -23,7 +23,7 @@ GRAPH_PATH_SETS = 'sets/'
 CSV_OUTPUT_FILE = "solution_table_{0}_{1}.csv"
 ALL_FILES_TXT_EXT = "**/*.txt"
 CSV_EXT = "csv"
-CSV_OUTPUT_DIR = "output"
+CSV_OUTPUT_DIR = "output2"
 
 # Messages
 MAIN_TOTAL_TIME = "Total time: {0} seconds."
@@ -34,13 +34,8 @@ MAIN_SEP_NAMES = "_"
 TOTAL_ITERATIONS = 100
 
 
-def export_graph_info(graph_instance):
-    for node in graph_instance.nodes.values():
-        print("{0}:{1}".format(node.node_id, node.neighbors_indices))
-
-
 def split_name(total_path):
-    name_splitted = os.path.splitext(total_path)[0].split("/")
+    name_splitted = os.path.splitext(total_path)[0].split(os.sep)
     return "{0}_{1}".format(name_splitted[1], name_splitted[-1])
 
 

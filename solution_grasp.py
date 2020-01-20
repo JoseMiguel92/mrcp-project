@@ -45,8 +45,8 @@ class SolutionGrasp:
             chosen_solution.find_clique(candidate)
             g_c.update({candidate: chosen_solution.sol_value})
         sorted_gc = sorted(g_c.items(), key=lambda kv: kv[1], reverse=True)
-        g_min = sorted_gc[0]
-        g_max = sorted_gc[-1]
+        g_min = sorted_gc[-1]
+        g_max = sorted_gc[0]
         return g_min[1], g_max[1], sorted_gc
 
     @staticmethod

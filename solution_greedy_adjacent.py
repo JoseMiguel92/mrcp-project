@@ -11,7 +11,7 @@ class SolutionGreedyNeighbors(SolutionGreedy):
         super().__init__(graph, name)
 
     def find_better(self, adjacent):
-        """ Find better candidate (with better ratio) from adjacent and verify if him form a clique. """
+        """ Find better candidate (with more neighbors) from adjacent and verify if him form a clique. """
         current_neighbors = -1
         node_chosen = None
         for node in adjacent:
