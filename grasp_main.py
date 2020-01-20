@@ -31,7 +31,7 @@ MAIN_LOG_PROCESS = "Processing: {0} - Solution type: {1} - Iteration: {2} - Alph
 MAIN_SEP_NAMES = "_"
 
 # Config
-TOTAL_ITERATIONS = 1
+TOTAL_ITERATIONS = 100
 
 
 def export_graph_info(graph_instance):
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     random_alpha = random.random()
     alpha_list = [0.25, 0.5, 0.75, random_alpha]
     graph = Instance()
-    solution_types = [SolutionGrasp.RATIO, SolutionGrasp.ADJACENT]
+    solution_types = [SolutionGrasp.ADJACENT]
     for solution_type in solution_types:
         for file in glob.glob(GRAPH_PATH_SETS + ALL_FILES_TXT_EXT, recursive=True):
             data = dict()
