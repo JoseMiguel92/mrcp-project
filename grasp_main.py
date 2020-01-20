@@ -23,7 +23,7 @@ GRAPH_PATH_SETS = 'sets/'
 CSV_OUTPUT_FILE = "solution_table_{0}_{1}.csv"
 ALL_FILES_TXT_EXT = "**/*.txt"
 CSV_EXT = "csv"
-CSV_OUTPUT_DIR = "output2"
+CSV_OUTPUT_DIR = "output"
 
 # Messages
 MAIN_TOTAL_TIME = "Total time: {0} seconds."
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     random_alpha = random.random()
     alpha_list = [0.25, 0.5, 0.75, random_alpha]
     graph = Instance()
-    solution_types = [SolutionGrasp.ADJACENT]
+    solution_types = [SolutionGrasp.RATIO, SolutionGrasp.ADJACENT]
     for solution_type in solution_types:
         for file in glob.glob(GRAPH_PATH_SETS + ALL_FILES_TXT_EXT, recursive=True):
             data = dict()
