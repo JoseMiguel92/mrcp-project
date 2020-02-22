@@ -20,7 +20,7 @@ class SolutionGrasp:
         total_keys = sorted(list(graph.nodes.keys()))
         vertex = random.randint(total_keys[0], total_keys[-1])
         solution = {vertex}
-        cl = graph.nodes[vertex].neighbors_indices
+        cl = graph.nodes[vertex].neighbors_indices.copy()
         while len(cl) != 0:
             g_min, g_max, gc = self.get_g(cl, solution_type, graph, name)
             mu = g_max - alpha * (g_max - g_min)

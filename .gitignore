@@ -3,6 +3,7 @@ __pycache__
 .idea
 venv
 .DS_STORE
+.DS_Store
 /setsBK/
 /setsBK2/
 /.vscode/

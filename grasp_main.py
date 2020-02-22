@@ -27,7 +27,7 @@ CSV_OUTPUT_DIR = "output"
 
 # Messages
 MAIN_TOTAL_TIME = "Total time: {0} seconds."
-MAIN_LOG_PROCESS = "Processing: {0} - Solution type: {1} - Iteration: {2} - Alpha: {3} - Time: {4:1.5f}"
+MAIN_LOG_PROCESS = "Processing: {0} - Solution type: {1} - Iteration: {2} - Alpha: {3} - Time: {4:1.5f} - Clique: {5}"
 MAIN_SEP_NAMES = "_"
 
 # Config
@@ -61,7 +61,8 @@ if __name__ == '__main__':
                         iteration) + MAIN_SEP_NAMES + str(alpha)
                     data.update({table_key_name: [graph.get_total_nodes(), density, ratio, cardinality,
                                                   find_grasp_sol_time, alpha]})
-                    LOGGER.debug(MAIN_LOG_PROCESS.format(file, solution_type, iteration, alpha, find_grasp_sol_time))
+                    LOGGER.debug(MAIN_LOG_PROCESS.format(file, solution_type, iteration, alpha, find_grasp_sol_time,
+                                                         solution))
             output_name = split_name(file)
             export_filename = CSV_OUTPUT_FILE.format(solution_type, output_name)
             GraphUtils.export_solution(CSV_OUTPUT_DIR, data, export_filename)
