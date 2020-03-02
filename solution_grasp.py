@@ -30,7 +30,7 @@ class SolutionGrasp:
             u = rcl[random_position][0]
             solution = solution.union({u})
             cl -= {u}
-            cl -= cl.intersection(graph.get_node(u).neighbors_indices)
+            cl.intersection_update(graph.get_node(u).neighbors_indices)
         return solution
 
     def get_g(self, candidates_list, solution_type, graph, name):
