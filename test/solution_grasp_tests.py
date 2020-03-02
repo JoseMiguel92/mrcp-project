@@ -11,6 +11,7 @@ from solution_grasp import SolutionGrasp
 
 
 class SolutionGraspTests(unittest.TestCase):
+    GRAPH_TEST = 'test_files/set-e/DIMACS2/johnson8-2-4.txt'
     GRAPH_SIMPLE_1_TEST_PTH = 'test_files/test-graph-type-1.txt'
 
     def test_grasp_OK(self):
@@ -55,6 +56,14 @@ class SolutionGraspTests(unittest.TestCase):
             print("{1} : {0}".format(num_r, i+1))
         for k, v in a:
             print("clave= {0}: valor= {1}".format(k, v))
+
+    def test_apply_ls(self):
+        solution = {16, 18, 19, 20, 21, 23}
+        graph = Instance()
+        file = SolutionGraspTests.GRAPH_TEST
+        graph.read_file(file)
+        instace_sol = SolutionGrasp()
+        instace_sol.apply_ls(graph, solution)
 
 
 if __name__ == '__main__':

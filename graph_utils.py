@@ -43,6 +43,16 @@ class GraphUtils:
         return clique
 
     @staticmethod
+    def is_clique_solution(graph, clique):
+        is_clique = True
+        for node in clique:
+            for node_to_compare in clique:
+                if graph.nodes[node].node_id != graph.nodes[node_to_compare].node_id:
+                    if not GraphUtils.are_adjacent(graph.nodes[node_to_compare], graph.nodes[node]):
+                        return False
+        return is_clique
+
+    @staticmethod
     def become_clique(graph, clique, node):
         is_clique = True
         for node_id in clique:

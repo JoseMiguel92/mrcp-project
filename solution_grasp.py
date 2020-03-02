@@ -5,6 +5,7 @@
 import logging
 import random
 
+from graph_utils import GraphUtils
 from solution_greedy_adjacent import SolutionGreedyNeighbors
 from solution_greedy_ratio import SolutionGreedyRatio
 
@@ -63,3 +64,39 @@ class SolutionGrasp:
         else:
             remaining_candidates = gc[:position].copy()
         return remaining_candidates
+
+    # TODO complete and refactor
+    def apply_ls(self, graph, solution, name):
+        sol_copy = solution.copy()
+        ratio_neighbors = set()
+        for node in solution:
+            ratio_neighbors.update(graph.nodes[node].neighbors_indices)
+        o_ratio_neighbors = sorted(ratio_neighbors, key=lambda x: graph.nodes[x].p_weight / graph.nodes[x].q_weight,
+                                   reverse=True)
+        better_node = o_ratio_neighbors.pop(0)
+        to_delete = set()
+        for node in sol_copy:
+            if better_node not in graph.nodes[node].neighbors_indices and better_node != node:
+                to_delete.add(node)
+        sol_copy = sol_copy - to_delete
+        sol_copy.update({better_node})
+        #
+        cliques = dict()
+        greedy_constructive = SolutionGreedyRatio(graph, name)
+        for node in sol_copy:
+            current_clique = greedy_constructive.find_clique(node)
+            if GraphUtils.is_clique_solution(graph, current_clique):
+                self.LOGGER.debug("is clique")
+                cliques.update({node: current_clique})
+        final_clique = self.complete_clique(solution, sol_copy, cliques)
+        # FIXME logger
+        if GraphUtils.is_clique_solution(graph, final_clique):
+            self.LOGGER.debug("good solution")
+        else:
+            self.LOGGER.fatal("isn't a solution")
+
+    def complete_clique(self, solution, clique_ls, cliques_neighbors):
+        final_clique = set()
+        for node, clique in cliques_neighbors.items():
+            final_clique = final_clique.union(clique)
+        return final_clique
