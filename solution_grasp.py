@@ -29,7 +29,8 @@ class SolutionGrasp:
             random.seed(fixed_seed)
             random_position = random.randint(0, len(rcl) - 1)
             u = rcl[random_position][0]
-            solution = solution.union({u})
+            if GraphUtils.become_clique(graph, solution, u):
+                solution = solution.union({u})
             cl -= {u}
             cl.intersection_update(graph.get_node(u).neighbors_indices)
         return solution
@@ -65,38 +66,62 @@ class SolutionGrasp:
             remaining_candidates = gc[:position].copy()
         return remaining_candidates
 
-    # TODO complete and refactor
-    def apply_ls(self, graph, solution, name):
+    def apply_ls(self, graph, solution):
         sol_copy = solution.copy()
         ratio_neighbors = set()
         for node in solution:
             ratio_neighbors.update(graph.nodes[node].neighbors_indices)
         o_ratio_neighbors = sorted(ratio_neighbors, key=lambda x: graph.nodes[x].p_weight / graph.nodes[x].q_weight,
                                    reverse=True)
-        better_node = o_ratio_neighbors.pop(0)
+        new_sol_temp = sol_copy.copy()
+        ls_solutions = list()
+        for node_ratio in o_ratio_neighbors:
+            new_sol_temp.update({node_ratio})
+            if not GraphUtils.is_clique_solution(graph, new_sol_temp):
+                new_sol_temp = self.clean_conflicted_nodes(graph, node_ratio, new_sol_temp)
+            if GraphUtils.is_clique_solution(graph, new_sol_temp):
+                for node_clique in new_sol_temp:
+                    result, result_ratio = self.find_clique_aux(graph, node_clique, new_sol_temp)
+                    ls_solutions.append((len(result), result_ratio, result))
+            else:
+                new_sol_temp.discard(node_ratio)
+        return self.give_solution(ls_solutions)
+
+    def clean_conflicted_nodes(self, graph, better_node, new_sol_temp):
         to_delete = set()
-        for node in sol_copy:
+        for node in new_sol_temp:
             if better_node not in graph.nodes[node].neighbors_indices and better_node != node:
                 to_delete.add(node)
-        sol_copy = sol_copy - to_delete
-        sol_copy.update({better_node})
-        #
-        cliques = dict()
-        greedy_constructive = SolutionGreedyRatio(graph, name)
-        for node in sol_copy:
-            current_clique = greedy_constructive.find_clique(node)
-            if GraphUtils.is_clique_solution(graph, current_clique):
-                self.LOGGER.debug("is clique")
-                cliques.update({node: current_clique})
-        final_clique = self.complete_clique(solution, sol_copy, cliques)
-        # FIXME logger
-        if GraphUtils.is_clique_solution(graph, final_clique):
-            self.LOGGER.debug("good solution")
-        else:
-            self.LOGGER.fatal("isn't a solution")
+        local_sol = new_sol_temp.difference(to_delete)
+        local_sol.update({better_node})
+        return local_sol
 
-    def complete_clique(self, solution, clique_ls, cliques_neighbors):
-        final_clique = set()
-        for node, clique in cliques_neighbors.items():
-            final_clique = final_clique.union(clique)
-        return final_clique
+    def find_clique_aux(self, graph, father, old_clique):
+        clique = old_clique.copy()
+        adjacent = graph.get_node(father).neighbors_indices.copy()
+        while len(adjacent) != 0:
+            candidate = self.find_better(graph, adjacent)
+            if GraphUtils.become_clique(graph, clique, candidate):
+                adjacent = GraphUtils.discard_adjacent(graph, adjacent, candidate)
+                clique.update({candidate})
+            else:
+                adjacent.discard(candidate)
+        return clique, GraphUtils.calculate_clique_ratio(graph, clique)
+
+    def find_better(self, graph, adjacent):
+        current_ratio = -1
+        node_chosen = None
+        for node in adjacent:
+            node_ratio = graph.get_node(node).p_weight / graph.get_node(node).q_weight
+            if node_ratio > current_ratio:
+                current_ratio = node_ratio
+                node_chosen = node
+
+        return node_chosen
+
+    def give_solution(self, ls_solutions):
+        sort_by_cardinality = sorted(ls_solutions, key=lambda x: x[0], reverse=True)
+        max_ratio = sort_by_cardinality[0][0]
+        ls_tuple_max_cardinality = [(x, y, z) for (x, y, z) in sort_by_cardinality if x == max_ratio]
+        sort_by_ratio = sorted(ls_tuple_max_cardinality, key=lambda x: x[1], reverse=True)
+        return sort_by_ratio[0][2]

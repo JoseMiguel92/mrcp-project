@@ -6,7 +6,6 @@ import os
 import unittest
 
 from instance import Instance
-from solution import Solution
 
 
 class SolutionTest(unittest.TestCase):

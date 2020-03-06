@@ -8,10 +8,11 @@ import bisect
 
 from instance import Instance
 from solution_grasp import SolutionGrasp
+from graph_utils import GraphUtils
 
 
 class SolutionGraspTests(unittest.TestCase):
-    GRAPH_TEST = 'test_files/set-e/DIMACS2/johnson8-2-4.txt'
+    GRAPH_TEST = 'test_files/setsPruebasFinal/set-e/DIMACS2/johnson8-2-4.txt'
     GRAPH_SIMPLE_1_TEST_PTH = 'test_files/test-graph-type-1.txt'
 
     def test_grasp_OK(self):
@@ -64,6 +65,18 @@ class SolutionGraspTests(unittest.TestCase):
         graph.read_file(file)
         instace_sol = SolutionGrasp()
         instace_sol.apply_ls(graph, solution)
+
+    def test_verify_clique(self):
+        SET_D = "test_files/setsPruebasFinal/set-d/wind-2005.txt"
+        SET_F = "test_files/setsPruebasFinal/set-f/DIMACS10/email.txt"
+        clique = {24, 94, 68, 30}
+        graph = Instance()
+        file = SET_D
+        graph.read_file(file)
+        if GraphUtils.is_clique_solution(graph, clique):
+            print("yes")
+        else:
+            print("no")
 
 
 if __name__ == '__main__':
