@@ -67,9 +67,9 @@ class SolutionGraspTests(unittest.TestCase):
         instace_sol.apply_ls(graph, solution)
 
     def test_verify_clique(self):
-        SET_D = "test_files/setsPruebasFinal/set-d/wind-2005.txt"
+        SET_D = "test_files/setsPruebasFinal/set-d/wind-2004.txt"
         SET_F = "test_files/setsPruebasFinal/set-f/DIMACS10/email.txt"
-        clique = {24, 94, 68, 30}
+        clique = {94, 66, 278, 14}
         graph = Instance()
         file = SET_D
         graph.read_file(file)

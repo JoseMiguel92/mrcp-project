@@ -9,10 +9,6 @@ import pandas as pd
 
 from logger.logger import Logger
 
-# Logs
-Logger.init_log()
-LOGGER = logging.getLogger(__name__)
-
 LOG_ERROR_WRITE_DOC = 'Error when writing a file.'
 
 
@@ -21,6 +17,8 @@ class GraphUtils:
     TYPE_DIMACS10 = 'DIMACS10'
     SET_SET_E = 'set-e'
     SET_SET_F = 'set-f'
+    # Logs
+    LOGGER = Logger.init_log()
 
     @staticmethod
     def are_adjacent(node_1, node_2):
@@ -91,7 +89,7 @@ class GraphUtils:
             path = output + file_sep + name
             GraphUtils.create_mrcp_csv_table(path, data)
         except IOError:
-            LOGGER.error(LOG_ERROR_WRITE_DOC)
+            GraphUtils.LOGGER.error(LOG_ERROR_WRITE_DOC)
 
     @staticmethod
     def calculate_clique_ratio(graph, clique):

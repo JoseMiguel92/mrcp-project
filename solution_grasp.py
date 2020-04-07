@@ -82,10 +82,11 @@ class SolutionGrasp:
             if GraphUtils.is_clique_solution(graph, new_sol_temp):
                 for node_clique in new_sol_temp:
                     result, result_ratio = self.find_clique_aux(graph, node_clique, new_sol_temp)
-                    ls_solutions.append((len(result), result_ratio, result))
+                    if GraphUtils.is_clique_solution(graph, result):
+                        ls_solutions.append((len(result), result_ratio, result))
             else:
                 new_sol_temp.discard(node_ratio)
-        return self.give_solution(ls_solutions)
+        return self.give_solution(ls_solutions, graph)
 
     def clean_conflicted_nodes(self, graph, better_node, new_sol_temp):
         to_delete = set()
@@ -119,9 +120,11 @@ class SolutionGrasp:
 
         return node_chosen
 
-    def give_solution(self, ls_solutions):
+    def give_solution(self, ls_solutions, graph):
         sort_by_cardinality = sorted(ls_solutions, key=lambda x: x[0], reverse=True)
         max_ratio = sort_by_cardinality[0][0]
         ls_tuple_max_cardinality = [(x, y, z) for (x, y, z) in sort_by_cardinality if x == max_ratio]
-        sort_by_ratio = sorted(ls_tuple_max_cardinality, key=lambda x: x[1], reverse=True)
-        return sort_by_ratio[0][2]
+        sorted_by_ratio = sorted(ls_tuple_max_cardinality, key=lambda x: x[1], reverse=True)
+        if not GraphUtils.is_clique_solution(graph, sorted_by_ratio[0][2]):
+            print('a')
+        return sorted_by_ratio[0][2]
